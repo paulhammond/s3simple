@@ -37,7 +37,7 @@ s3simple() {
   signature=$(echo -n "$string_to_sign" | openssl sha1 -binary -hmac "${AWS_SECRET_ACCESS_KEY}" | openssl base64)
   authorization="AWS ${AWS_ACCESS_KEY_ID}:${signature}"
 
-  curl -o ${file} -s -v -f -H Date:"${date}" -H Authorization:"${authorization}" http://s3.amazonaws.com/${path}
+  curl -o ${file} -s -f -H Date:"${date}" -H Authorization:"${authorization}" http://s3.amazonaws.com/${path}
 }
 
 s3simple "$@"
