@@ -3,8 +3,14 @@
 # s3simple is a small, simple bash s3 client with minimal dependencies.
 # See http://github.com/paulhammond/s3simple for documentation.
 s3simple() {
-  url="$1"
-  file="${2:--}"
+  method="$1"
+  url="$2"
+  file="${3:--}"
+
+  if [ "$method" != "GET" ]; then
+    echo "Unsupported method"
+    exit 1
+  fi
 
   if [ "${url:0:5}" != "s3://" ]; then
     echo "Need an s3 url"
