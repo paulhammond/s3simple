@@ -3,19 +3,17 @@
 # s3simple is a small, simple bash s3 client with minimal dependencies.
 # See http://github.com/paulhammond/s3simple for documentation.
 s3simple() {
-  method="$1"
+  command="$1"
   url="$2"
   file="${3:--}"
 
-  if [ "$method" != "GET" ]; then
-    echo "Unsupported method"
-    exit 1
-  fi
+  # todo: nice error message if unsupported command?
 
   if [ "${url:0:5}" != "s3://" ]; then
     echo "Need an s3 url"
     exit 1
   fi
+  path=${url:4}
 
   if [ -z $AWS_ACCESS_KEY_ID ]; then
     echo "Need AWS_ACCESS_KEY_ID to be set"
@@ -27,17 +25,33 @@ s3simple() {
     exit 1
   fi
 
-  path=${url:4}
+  case "$command" in
+  get)
+    method="GET"
+    md5=""
+    args="-o $file"
+    ;;
+  put)
+    method="PUT"
+    if [ ! -f $file ]; then
+      echo "file not found"
+      exit 1
+    fi
+    md5="$(openssl md5 -binary $file | openssl base64)"
+    args="-T $file -H Content-MD5:$md5"
+    ;;
+  *)
+    echo "Unsupported command"
+    exit 1
+  esac
 
-  verb=GET
   date="$(date -u '+%a, %e %b %Y %H:%M:%S +0000')"
 
-  # GET \n (md5 blank) \n (type blank) \n date \n path
-  printf -v string_to_sign "GET\n\n\n%s\n/%s" "$date" "$path"
+  printf -v string_to_sign "%s\n%s\n\n%s\n%s" "$method" "$md5" "$date" "$path"
   signature=$(echo -n "$string_to_sign" | openssl sha1 -binary -hmac "${AWS_SECRET_ACCESS_KEY}" | openssl base64)
   authorization="AWS ${AWS_ACCESS_KEY_ID}:${signature}"
 
-  curl -o ${file} -s -f -H Date:"${date}" -H Authorization:"${authorization}" http://s3.amazonaws.com/${path}
+  curl $args -s -f -H Date:"${date}" -H Authorization:"${authorization}" http://s3.amazonaws.com${path}
 }
 
 s3simple "$@"
