@@ -13,18 +13,18 @@ s3simple() {
 
   if [ "${url:0:5}" != "s3://" ]; then
     echo "Need an s3 url"
-    exit 1
+    return 1
   fi
   local path=${url:4}
 
   if [ -z "${AWS_ACCESS_KEY_ID-}"  ]; then
     echo "Need AWS_ACCESS_KEY_ID to be set"
-    exit 1
+    return 1
   fi
 
   if [ -z "${AWS_SECRET_ACCESS_KEY-}" ]; then
     echo "Need AWS_SECRET_ACCESS_KEY to be set"
-    exit 1
+    return 1
   fi
 
   local method md5 args
@@ -45,7 +45,7 @@ s3simple() {
     ;;
   *)
     echo "Unsupported command"
-    exit 1
+    return 1
   esac
 
   local date="$(date -u '+%a, %e %b %Y %H:%M:%S +0000')"
