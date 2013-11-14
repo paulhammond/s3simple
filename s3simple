@@ -3,7 +3,7 @@
 set -eu
 
 # s3simple is a small, simple bash s3 client with minimal dependencies.
-# See http://github.com/paulhammond/s3simple for documentation.
+# See http://github.com/paulhammond/s3simple for documentation and licence.
 s3simple() {
   local command="$1"
   local url="$2"
