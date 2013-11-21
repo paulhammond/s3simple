@@ -15,7 +15,7 @@ s3simple() {
     echo "Need an s3 url"
     return 1
   fi
-  local path=${url:4}
+  local path="${url:4}"
 
   if [ -z "${AWS_ACCESS_KEY_ID-}"  ]; then
     echo "Need AWS_ACCESS_KEY_ID to be set"
@@ -36,7 +36,7 @@ s3simple() {
     ;;
   put)
     method="PUT"
-    if [ ! -f $file ]; then
+    if [ ! -f "$file" ]; then
       echo "file not found"
       exit 1
     fi
@@ -54,7 +54,7 @@ s3simple() {
   local signature=$(echo -n "$string_to_sign" | openssl sha1 -binary -hmac "${AWS_SECRET_ACCESS_KEY}" | openssl base64)
   local authorization="AWS ${AWS_ACCESS_KEY_ID}:${signature}"
 
-  curl $args -s -f -H Date:"${date}" -H Authorization:"${authorization}" https://s3.amazonaws.com${path}
+  curl $args -s -f -H Date:"${date}" -H Authorization:"${authorization}" https://s3.amazonaws.com"${path}"
 }
 
 s3simple "$@"
