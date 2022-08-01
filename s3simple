@@ -47,6 +47,10 @@ s3simple() {
     echo "Unsupported command"
     return 1
   esac
+  
+  if [ ! -z "${AWS_SESSION_TOKEN-}" ]; then
+    args="$args -H x-amz-security-token:${AWS_SESSION_TOKEN}"
+  fi
 
   local date="$(date -u '+%a, %e %b %Y %H:%M:%S +0000')"
   local string_to_sign
