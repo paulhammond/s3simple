@@ -9,8 +9,6 @@ s3simple() {
   local url="$2"
   local file="${3:--}"
 
-  # todo: nice error message if unsupported command?
-
   if [ "${url:0:5}" != "s3://" ]; then
     echo "Need an s3 url"
     return 1
@@ -47,7 +45,7 @@ s3simple() {
     echo "Unsupported command"
     return 1
   esac
-  
+
   local aws_headers=""
   if [ -n "${AWS_SESSION_TOKEN-}" ]; then
     args=("${args[@]}" -H "x-amz-security-token:${AWS_SESSION_TOKEN}")
