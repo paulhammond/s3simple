@@ -44,7 +44,7 @@ s3simple() {
       exit 1
     fi
     md5="$(openssl md5 -binary "$file" | openssl base64)"
-    args=(-T "$file" -H "Content-MD5:$md5")
+    args=(-T "$file" -H "Content-MD5: $md5")
     ;;
   *)
     echo "Unsupported command"
@@ -53,7 +53,7 @@ s3simple() {
 
   local aws_headers=""
   if [ -n "${AWS_SESSION_TOKEN-}" ]; then
-    args=("${args[@]}" -H "x-amz-security-token:${AWS_SESSION_TOKEN}")
+    args=("${args[@]}" -H "x-amz-security-token: ${AWS_SESSION_TOKEN}")
     aws_headers="x-amz-security-token:${AWS_SESSION_TOKEN}\n"
   fi
 
@@ -71,7 +71,7 @@ s3simple() {
   local bucket="${path%/*}"
   local key="${path#*/}"
 
-  curl "${args[@]}" -s -f -H Date:"${date}" -H Authorization:"${authorization}" "https://${bucket}.s3.amazonaws.com/${key}"
+  curl "${args[@]}" -s -f -H "Date: ${date}" -H "Authorization: ${authorization}" "https://${bucket}.s3.amazonaws.com/${key}"
 }
 
 s3simple "$@"
