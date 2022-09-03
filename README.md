@@ -21,6 +21,9 @@ For example:
     # get a file
     ./s3simple get s3://mybucket/myfile.txt myfile.txt
 
+    # fetch metadata about an object
+    ./s3simple head s3://mybucket/myfile.txt
+
     # put a file
     ./s3simple put s3://mybucket/foo.txt foo.txt
 
