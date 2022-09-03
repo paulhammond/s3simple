@@ -49,7 +49,7 @@ s3simple() {
   esac
   
   local aws_headers=""
-  if [ ! -z "${AWS_SESSION_TOKEN-}" ]; then
+  if [ -n "${AWS_SESSION_TOKEN-}" ]; then
     args=("${args[@]}" -H "x-amz-security-token:${AWS_SESSION_TOKEN}")
     aws_headers="x-amz-security-token:${AWS_SESSION_TOKEN}\n"
   fi
