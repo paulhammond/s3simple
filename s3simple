@@ -32,7 +32,7 @@ s3simple() {
   get)
     method="GET"
     md5=""
-    args="-o $file"
+    args=(-o "$file")
     ;;
   put)
     method="PUT"
@@ -40,8 +40,8 @@ s3simple() {
       echo "file not found"
       exit 1
     fi
-    md5="$(openssl md5 -binary $file | openssl base64)"
-    args="-T $file -H Content-MD5:$md5"
+    md5="$(openssl md5 -binary "$file" | openssl base64)"
+    args=(-T "$file" -H "Content-MD5:$md5")
     ;;
   *)
     echo "Unsupported command"
@@ -50,7 +50,7 @@ s3simple() {
   
   local aws_headers=""
   if [ ! -z "${AWS_SESSION_TOKEN-}" ]; then
-    args="$args -H x-amz-security-token:${AWS_SESSION_TOKEN}"
+    args=("${args[@]}" -H "x-amz-security-token:${AWS_SESSION_TOKEN}")
     aws_headers="x-amz-security-token:${AWS_SESSION_TOKEN}\n"
   fi
 
@@ -68,7 +68,7 @@ s3simple() {
   local bucket="${path%/*}"
   local key="${path#*/}"
 
-  curl $args -s -f -H Date:"${date}" -H Authorization:"${authorization}" "https://${bucket}.s3.amazonaws.com/${key}"
+  curl "${args[@]}" -s -f -H Date:"${date}" -H Authorization:"${authorization}" "https://${bucket}.s3.amazonaws.com/${key}"
 }
 
 s3simple "$@"
