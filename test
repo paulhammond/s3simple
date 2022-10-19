@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+
+cd "${0%/*}"
+
+files=("s3simple" "test")
+
+echo "shfmt:"
+shfmt -d "${files[@]}"
+echo "ok"
+
+echo "shellcheck:"
+shellcheck "${files[@]}"
+echo "ok"
