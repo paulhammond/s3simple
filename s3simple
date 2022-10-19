@@ -68,7 +68,7 @@ s3simple() {
 
   local authorization="AWS ${AWS_ACCESS_KEY_ID}:${signature}"
 
-  local bucket="${path%/*}"
+  local bucket="${path%%/*}"
   local key="${path#*/}"
 
   curl "${args[@]}" -s -f -H "Date: ${date}" -H "Authorization: ${authorization}" "https://${bucket}.s3.amazonaws.com/${key}"
