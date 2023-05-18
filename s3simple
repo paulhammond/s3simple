@@ -72,7 +72,12 @@ s3simple() {
 	local bucket="${path%%/*}"
 	local key="${path#*/}"
 
-	curl "${args[@]}" -s -f -H "Date: ${date}" -H "Authorization: ${authorization}" "https://${bucket}.s3.amazonaws.com/${key}"
+	local url="https://${bucket}.s3.amazonaws.com"
+	if [ -n "${S3_SERVER-}" ]; then
+	    url="${S3_SERVER}/${bucket}"
+	fi
+
+	curl "${args[@]}" -s -f -H "Date: ${date}" -H "Authorization: ${authorization}" "${url}/${key}"
 }
 
 s3simple "$@"
